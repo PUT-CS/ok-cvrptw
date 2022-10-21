@@ -14,6 +14,12 @@ public:
     ~Depot() {}
 };
 
+void skip(std::ifstream &file, int n) {
+    string buf;
+    for (int i=0; i<n; i++)
+	file>>buf;
+}
+
 class Problem {
 public:
     int num_of_trucks, truck_capacity;
@@ -22,10 +28,10 @@ public:
     void readFrom(std::string filename) {
 	std::ifstream input(filename, std::ios_base::in);
 	std::string buf;
-	input>>buf>>buf>>buf>>buf;
+	skip(input, 4);
 	input>>this->num_of_trucks;
 	input>>this->truck_capacity;
-	input>>buf>>buf>>buf>>buf>>buf>>buf>>buf>>buf>>buf>>buf>>buf>>buf;
+	skip(input, 12);
 
 	while (!input.eof()) {
 	    Depot new_depot;
