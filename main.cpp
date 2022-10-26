@@ -1,17 +1,31 @@
 #include <cstdio>
 #include <cstdlib>
 #include <iostream>
+#include <math.h>
 #include <sstream>
 #include <vector>
 #include <fstream>
 #include <cmath>
 #include <algorithm>
+#include <iomanip>
 
 using std::string;
 
 class Depot {
 public:
     int num, x, y, demand, ready_time, end_time, service_duration;
+    void print(){
+	using std::cout, std::endl;
+	cout<<std::setw(3)<<
+	    this->num<<
+	    this->x<<
+	    this->y<<
+	    this->demand<<
+	    this->ready_time<<
+	    this->end_time<<
+	    this->service_duration<<
+	    endl;
+    }
     Depot() {}
     ~Depot() {}
 };
@@ -22,10 +36,24 @@ void skip(std::ifstream &file, int n) {
 	file>>buf;
 }
 
+double dist(double x1, double y1, double x2, double y2) {
+    return std::sqrt(pow((x2-x1), 2) + std::pow((y2-y1), 2));
+}
+
+double slope_in_deg(double x1, double y1, double x2, double y2) {
+    //    printf("\nCalculating slope!\n"
+    //	   "x1: %lf\tx2: %lf\ty1: %lf\ty2: %lf\n", x1, x2, y1, y2);
+    //    printf("\n%lf\n", (y2-y1)/(x2-x1));
+    //    printf("\n%lf\n", (x2-x1));
+    return std::atan((y2-y1)/(x2-x1));
+}
+
+
 class Problem {
 public:
     int num_of_trucks, truck_capacity;
     std::vector<Depot> depots;
+    Depot start_depot;
     
     void readFrom(std::string filename) {
 	std::ifstream input(filename, std::ios_base::in);
@@ -47,6 +75,7 @@ public:
 		new_depot.service_duration;
 	    this->depots.push_back(new_depot);
 	}
+	this->start_depot = this->depots[0];
 	input.close();
     }
     void print() {
@@ -60,6 +89,10 @@ public:
 		<<d.num<<'\t'
 		<<d.x<<'\t'
 		<<d.y<<'\t'
+
+		<< "dist=" << dist(this->start_depot.x, this->start_depot.y, d.x, d.y)<<"\t"
+		<< "angle="<<slope_in_deg(0.0, 0.0, d.x, d.y)<<"\t"
+		
 		<<d.demand<<'\t'
 		<<d.ready_time<<'\t'
 		<<d.end_time<<'\t'
@@ -77,9 +110,9 @@ int main(int argc, char* argv[]) {
     Problem problem;
     problem.readFrom(argv[1]);
     problem.print();
-    std::cout<< "Each truck has " << 360/problem.num_of_trucks << " degrees to cover" << std::endl;
-    float degs_to_cover = 360.0/problem.num_of_trucks;
-    float first_a = 0.0, second_a = degs_to_cover;
+    //std::cout<< "Each truck has " << 360.0/problem.num_of_trucks << " degrees to cover" << std::endl;
+    double degs_to_cover = 360.0/problem.num_of_trucks;
+    double first_a = 0.0, second_a = degs_to_cover;
     std::vector<std::vector<float>> deg_pairs;
 
     while (second_a < 360) {
@@ -88,11 +121,12 @@ int main(int argc, char* argv[]) {
 	deg_pairs.push_back(v);
 	first_a = second_a;
 	second_a += degs_to_cover;
-	second_a = std::ceil(second_a);
+	//	second_a = std::ceil(second_a);
 	if (second_a + degs_to_cover > 360) {
 	    second_a = 360;
 	}
     }
+    
     std::vector<float> f;
     f.push_back(first_a);
     f.push_back(second_a);
