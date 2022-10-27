@@ -2,18 +2,21 @@
 #include <cstdlib>
 #include <iostream>
 #include <math.h>
+#include <ostream>
 #include <sstream>
 #include <vector>
 #include <fstream>
 #include <cmath>
 #include <algorithm>
 #include <iomanip>
+#define PI 3.141593
 
 using std::string;
 
 class Depot {
 public:
     int num, x, y, demand, ready_time, end_time, service_duration;
+    double dist, angle;
     void print(){
 	using std::cout, std::endl;
 	cout<<std::setw(3)<<
@@ -41,11 +44,15 @@ double dist(double x1, double y1, double x2, double y2) {
 }
 
 double slope_in_deg(double x1, double y1, double x2, double y2) {
-    //    printf("\nCalculating slope!\n"
-    //	   "x1: %lf\tx2: %lf\ty1: %lf\ty2: %lf\n", x1, x2, y1, y2);
-    //    printf("\n%lf\n", (y2-y1)/(x2-x1));
-    //    printf("\n%lf\n", (x2-x1));
-    return std::atan((y2-y1)/(x2-x1));
+    double res = std::atan((y2-y1)/(x2-x1));
+    res = res*180/PI; // na stopnie
+    // kompensacja za ćwiartki, zasięg wyniku = 0 -> 360
+    if (x2 < x1) {
+	res += 180;
+    } else if (x1 <= x2 && y1 > y2) {
+	res += 360;
+    }
+    return res;
 }
 
 
@@ -76,6 +83,10 @@ public:
 	    this->depots.push_back(new_depot);
 	}
 	this->start_depot = this->depots[0];
+	for (auto &depot : this->depots) {
+	    depot.dist = dist(this->start_depot.x, this->start_depot.y, depot.x, depot.y);
+	    depot.angle = slope_in_deg(this->start_depot.x, this->start_depot.y, depot.x, depot.y);
+	}
 	input.close();
     }
     void print() {
@@ -89,9 +100,8 @@ public:
 		<<d.num<<'\t'
 		<<d.x<<'\t'
 		<<d.y<<'\t'
-
-		<< "dist=" << dist(this->start_depot.x, this->start_depot.y, d.x, d.y)<<"\t"
-		<< "angle="<<slope_in_deg(this->start_depot.x, this->start_depot.y, d.x, d.y)*180<<"\t"
+		<<"dist=" <<d.dist<<"\t"
+		<<"angle="<<d.angle<<"\t"
 		<<d.demand<<'\t'
 		<<d.ready_time<<'\t'
 		<<d.end_time<<'\t'
@@ -108,7 +118,7 @@ int main(int argc, char* argv[]) {
     }
     Problem problem;
     problem.readFrom(argv[1]);
-    //    problem.print();
+    problem.print();
     //std::cout<< "Each truck has " << 360.0/problem.num_of_trucks << " degrees to cover" << std::endl;
     double degs_to_cover = 360.0/problem.num_of_trucks;
     double first_a = 0.0, second_a = degs_to_cover;
@@ -130,8 +140,8 @@ int main(int argc, char* argv[]) {
     f.push_back(second_a);
     deg_pairs.push_back(f);
     for (auto &element : deg_pairs) {
-	//printf("%f -> %f\n", element[0], element[1]);
+       	printf("%f -> %f\n", element[0], element[1]);
     }
-    
     return 0;
 }
+

@@ -1,6 +1,6 @@
 CC=g++
 NAME=cvrptw
-CC_FLAGS=-o $(NAME)
+CC_FLAGS=-o $(NAME) -Wall -Wextra -Wpedantic
 
 .PHONY: test clean
 
