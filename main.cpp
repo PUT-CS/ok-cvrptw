@@ -91,8 +91,7 @@ public:
 		<<d.y<<'\t'
 
 		<< "dist=" << dist(this->start_depot.x, this->start_depot.y, d.x, d.y)<<"\t"
-		<< "angle="<<slope_in_deg(0.0, 0.0, d.x, d.y)<<"\t"
-		
+		<< "angle="<<slope_in_deg(this->start_depot.x, this->start_depot.y, d.x, d.y)*180<<"\t"
 		<<d.demand<<'\t'
 		<<d.ready_time<<'\t'
 		<<d.end_time<<'\t'
@@ -109,7 +108,7 @@ int main(int argc, char* argv[]) {
     }
     Problem problem;
     problem.readFrom(argv[1]);
-    problem.print();
+    //    problem.print();
     //std::cout<< "Each truck has " << 360.0/problem.num_of_trucks << " degrees to cover" << std::endl;
     double degs_to_cover = 360.0/problem.num_of_trucks;
     double first_a = 0.0, second_a = degs_to_cover;
@@ -121,7 +120,6 @@ int main(int argc, char* argv[]) {
 	deg_pairs.push_back(v);
 	first_a = second_a;
 	second_a += degs_to_cover;
-	//	second_a = std::ceil(second_a);
 	if (second_a + degs_to_cover > 360) {
 	    second_a = 360;
 	}
@@ -132,7 +130,7 @@ int main(int argc, char* argv[]) {
     f.push_back(second_a);
     deg_pairs.push_back(f);
     for (auto &element : deg_pairs) {
-      printf("%f -> %f\n", element[0], element[1]);
+	//printf("%f -> %f\n", element[0], element[1]);
     }
     
     return 0;
