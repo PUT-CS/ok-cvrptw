@@ -1,3 +1,5 @@
+#ifndef DEPOT_H
+#define DEPOT_H
 #include <iostream>
 #include <iomanip>
 class Depot {
@@ -8,3 +10,5 @@ public:
     Depot() {}
     ~Depot() {}
 };
+
+#endif
