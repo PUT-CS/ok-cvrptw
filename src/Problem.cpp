@@ -3,8 +3,10 @@
 #include <fstream>
 #include <cmath>
 #include <ostream>
+#include <random>
 #include <vector>
 #include <bits/stdc++.h>
+#include "Depot.h"
 #include "Problem.h"
 #include "Truck.h"
 #define PI 3.141593
@@ -29,6 +31,13 @@ double slope_in_deg(double x1, double y1, double x2, double y2) {
 	res += 360;
     }
     return res;
+}
+
+int Problem::randIntInRangeInclusive(int min, int max) {
+    std::random_device rd; // obtain a random number from hardware
+    std::mt19937 gen(rd()); // seed the generator
+    std::uniform_int_distribution<> distr(min, max); // define the range
+    return distr(gen);
 }
 
 void Problem::readFrom(std::string filename) {
@@ -103,55 +112,46 @@ void Problem::print() {
 	}
 }
 
-void Problem::assignDepotsToTrucks() {
-     std::vector<std::vector<float>> deg_ranges;
-    double degs_to_cover =
-	(this->max_angle - this->min_angle) / this->num_of_trucks;
-    double first_a = this->min_angle, second_a = first_a + degs_to_cover;
-    while (second_a < this->max_angle) {
-	std::vector<float> v;
-	v.push_back(first_a);
-	v.push_back(second_a);
-	deg_ranges.push_back(v);
-	first_a = second_a;
-	second_a += degs_to_cover;
-	if (second_a + degs_to_cover > this->max_angle) {
-	    second_a = this->max_angle;
+/// Randomly assign depots to trucks
+void Problem::assignDepotsToTrucks(int truck_num) {
+
+    // deep copy depots
+    std::vector<Depot> tmp_depot_vec(this->depots);
+
+    // index of the truck we are currently assigning for
+    int current_truck_idx = 0;
+    int max_truck_idx = truck_num;
+
+    // index of the currently assigned depot, start at one since 0 is the start
+    int depot_idx = 1;
+
+    // while there are still some unassigned depots
+    // `-1` since we are leaving the starting depot as is
+    while (tmp_depot_vec.size()-1 != 0) {
+
+	int rand_idx = this->randIntInRangeInclusive(1, tmp_depot_vec.size()-1);
+	
+	// assing the depot, mark it as assigned by removing from tmp_depot_vec
+	this->trucks[current_truck_idx].assignment.push_back(tmp_depot_vec[rand_idx]);
+
+	// remove rand_idx from tmp_depot_vec;
+	tmp_depot_vec.erase(tmp_depot_vec.begin()+rand_idx);
+
+	for (auto &de : tmp_depot_vec) {
+	    std::cout<<de.num<<" ";
 	}
-    }
-    
-    std::vector<float> f;
-    f.push_back(first_a);
-    f.push_back(second_a);
-    deg_ranges.push_back(f);
-    
-    std::vector<std::vector<Depot>> truck_assignments;
-    
-    for (int i = 0; i<deg_ranges.size(); i++) {
-	auto &range = deg_ranges[i];
-	// now we need to split the depots into lists for each truck
-	std::vector<Depot> tmp_assignment;
-	for (auto &depot : this->depots) {
-	    if (depot.angle >= range[0] && depot.angle < range[1]) {
-		tmp_assignment.push_back(depot);
-	    }
-	}
-	truck_assignments.push_back(tmp_assignment);
-	this->trucks.at(i).assignment = tmp_assignment;
+	std::cout<<std::endl;
+	
+        // set what truck is to be assigned to next
+	current_truck_idx = (current_truck_idx+1) % max_truck_idx;
     }
 }
 
-void Problem::solveGreedy() {
-    this->assignDepotsToTrucks();
-    // the depots are split into lists for each of the trucks
-    // now we need to solve the subproblem assigned to each truck
+void Problem::solveAnnealing() {
+    this->assignDepotsToTrucks(this->num_of_trucks);
     for (auto &truck : this->trucks) {
-	this->solution.push_back(truck.solveSubproblem(this->start_depot));
+	//this->solution.push_back(truck.solveSubproblem(this->start_depot));
     }
-    // the initial subproblem solving probably won't cover all of the depots.
-    // now we can check for trucks that don't have any depots assigned
-    // and assign them to those depots that couldn't be covered
-    // however, if there are no free trucks left, we assume there's no viable solution.
     this->print();
     
     return;

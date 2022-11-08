@@ -18,6 +18,6 @@ int main(int argc, char* argv[]) {
     }
     Problem problem;
     problem.readFrom(argv[1]);
-    problem.solveGreedy();
+    problem.solveAnnealing();
     return 0;
 }
