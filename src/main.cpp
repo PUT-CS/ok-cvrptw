@@ -1,5 +1,6 @@
 #include <cstdio>
 #include <cstdlib>
+#include <ctime>
 #include <iostream>
 #include <math.h>
 #include <ostream>
@@ -16,6 +17,7 @@ int main(int argc, char* argv[]) {
 	fprintf(stderr, "Please provide a file as an argument");
 	exit(1);
     }
+    srand(time(0));
     Problem problem;
     problem.readFrom(argv[1]);
     problem.solveAnnealing();

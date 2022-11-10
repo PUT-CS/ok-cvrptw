@@ -9,6 +9,7 @@
 #include "Depot.h"
 #include "Problem.h"
 #include "Truck.h"
+#include "functions.h"
 #define PI 3.141593
 
 void skip(std::ifstream &file, int n) {
@@ -17,22 +18,26 @@ void skip(std::ifstream &file, int n) {
 	file>>buf;
 }
 
-double dist(double x1, double y1, double x2, double y2) {
-    return std::sqrt(pow((x2-x1), 2) + std::pow((y2-y1), 2));
-}
-
-double slope_in_deg(double x1, double y1, double x2, double y2) {
-    double res = std::atan((y2-y1)/(x2-x1));
-    res = res*180/PI; // na stopnie
-    // kompensacja za ćwiartki, zasięg wyniku = 0 -> 360
-    if (x2 < x1) {
-	res += 180;
-    } else if (x1 <= x2 && y1 > y2) {
-	res += 360;
+void Problem::computeDistances() {
+    for (auto &depot1 : this->depots) {
+	std::vector<double> n_row;
+	for (auto &depot2 : this->depots) {
+	    n_row.push_back(dist(depot1, depot2));
+	}
+	this->distances.push_back(n_row);
     }
-    return res;
 }
 
+void Problem::printDistances() {
+    for (int i = 0; i<this->distances.size(); i++) {
+	for (int j=0; j<this->distances[0].size(); j++) {
+	    std::cout<<this->distances[i][j]<<" ";
+	}
+	std::cout<<std::endl;
+    }
+}
+
+    
 int Problem::randIntInRangeInclusive(int min, int max) {
     std::random_device rd; // obtain a random number from hardware
     std::mt19937 gen(rd()); // seed the generator
@@ -61,9 +66,9 @@ void Problem::readFrom(std::string filename) {
 	    this->depots.push_back(new_depot);
 	}
 	this->start_depot = this->depots[0];
-	this->min_angle = 360.0;
-	this->max_angle = 0.0;
-	for (auto &depot : this->depots) {
+	//	this->min_angle = 360.0;
+	//	this->max_angle = 0.0;
+	/*for (auto &depot : this->depots) {
 	    depot.dist = dist(this->start_depot.x, this->start_depot.y, depot.x, depot.y);
 	    depot.angle = slope_in_deg(this->start_depot.x, this->start_depot.y, depot.x, depot.y);
 	    if (depot.angle < this->min_angle) {
@@ -72,7 +77,7 @@ void Problem::readFrom(std::string filename) {
 	    if (depot.angle > this->max_angle) {
 		this->max_angle = depot.angle;
 	    }
-	}
+	    }*/
 	for (int i = 0; i<num_of_trucks; i++) {
 	    trucks.push_back(Truck(truck_capacity));
 	}
@@ -92,7 +97,7 @@ void Problem::print() {
 		<<d.x<<'\t'
 		<<d.y<<'\t'
 		<<"dist=" <<d.dist<<"\t"
-		<<"angle="<<d.angle<<"\t"
+		//<<"angle="<<d.angle<<"\t"
 		<<d.demand<<'\t'
 		<<d.ready_time<<'\t'
 		<<d.end_time<<'\t'
@@ -149,10 +154,12 @@ void Problem::assignDepotsToTrucks(int truck_num) {
 
 void Problem::solveAnnealing() {
     this->assignDepotsToTrucks(this->num_of_trucks);
+    this->computeDistances();
+    //this->printDistances();
+    // this->print();
     for (auto &truck : this->trucks) {
-	//this->solution.push_back(truck.solveSubproblem(this->start_depot));
+	this->solution.push_back(truck.solveAnnealing(this->start_depot));
     }
-    this->print();
     
     return;
 }

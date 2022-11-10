@@ -19,10 +19,13 @@ public:
     std::vector<Truck> trucks;
     Depot start_depot;
     std::vector<std::vector<Depot>> solution;
+    std::vector<std::vector<double>> distances;
     int randIntInRangeInclusive(int min, int max);
+    void computeDistances();
     void readFrom(std::string filename);
     void assignDepotsToTrucks(int truck_num);
     void print();
+    void printDistances();
     void solveAnnealing();
 };
 

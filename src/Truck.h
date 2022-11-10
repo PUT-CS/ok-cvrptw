@@ -9,7 +9,7 @@ public:
     std::vector<Depot> assignment;
     std::vector<Depot> route;
     void print();
-    std::vector<Depot> solveSubproblem(Depot &start);
+    std::vector<Depot> solveAnnealing(Depot &start);
     Truck(int c);
     ~Truck();
 };
