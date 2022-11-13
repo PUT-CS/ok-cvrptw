@@ -20,6 +20,7 @@ public:
     Depot start_depot;
     std::vector<std::vector<Depot>> solution;
     std::vector<std::vector<double>> distances;
+    bool bad_assignment = true;
     int randIntInRangeInclusive(int min, int max);
     void computeDistances();
     void readFrom(std::string filename);

@@ -21,5 +21,6 @@ int main(int argc, char* argv[]) {
     Problem problem;
     problem.readFrom(argv[1]);
     problem.solveAnnealing();
+    problem.print();
     return 0;
 }
