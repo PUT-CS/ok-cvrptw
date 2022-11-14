@@ -3,4 +3,4 @@ cvrptw
 *.txt
 description/
 *.org
-/target
+time_helper_util/target/*

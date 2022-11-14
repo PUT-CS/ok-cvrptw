@@ -1,15 +1,4 @@
-#include <cstdio>
-#include <cstdlib>
-#include <ctime>
 #include <iostream>
-#include <math.h>
-#include <ostream>
-#include <sstream>
-#include <vector>
-#include <fstream>
-#include <cmath>
-#include <algorithm>
-#include <iomanip>
 #include "Problem.h"
 
 int main(int argc, char* argv[]) {
@@ -21,6 +10,8 @@ int main(int argc, char* argv[]) {
     Problem problem;
     problem.readFrom(argv[1]);
     problem.solveAnnealing();
-    problem.print();
+    //problem.print();
+    problem.computeSolutionValue();
+    problem.save(argc, argv);
     return 0;
 }

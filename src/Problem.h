@@ -20,6 +20,8 @@ public:
     Depot start_depot;
     std::vector<std::vector<Depot>> solution;
     std::vector<std::vector<double>> distances;
+    double solution_sum = 0;
+    int routes = 0;
     bool bad_assignment = true;
     int randIntInRangeInclusive(int min, int max);
     void computeDistances();
@@ -28,6 +30,10 @@ public:
     void print();
     void printDistances();
     void solveAnnealing();
+    void save(int argc, char* argv[]);
+    void printSolution();
+    void computeSolutionValue();
+    void saveSolutionToFile(char* name);
 };
 
 #endif
