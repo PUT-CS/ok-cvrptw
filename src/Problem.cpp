@@ -1,11 +1,13 @@
 #include <algorithm>
 #include <cstdio>
+#include <cstdlib>
 #include <iostream>
 #include <fstream>
 #include <cmath>
 #include <memory>
 #include <ostream>
 #include <random>
+#include <string>
 #include <vector>
 #include <bits/stdc++.h>
 #include "Depot.h"
@@ -59,28 +61,34 @@ void Problem::solveAnnealing(int INITIAL_TEMP, int MIN_TEMP, float COOLING_RATE,
 
     // attempt to use truck numbers all the way from num_of_trucks down to 1
     while (used_trucks > 0) {
+        //fprintf(stderr, "Trucks: %s\n", std::to_string(used_trucks).c_str());
         tmp_all_solution.clear();
         // start measuring time in the current truck number
         auto start_of_truck_num_iter = std::chrono::high_resolution_clock().now();
+        
         // assigning procedure
     assigning:
         auto current = std::chrono::high_resolution_clock().now();
         auto duration = std::chrono::duration_cast<std::chrono::seconds>(current - start);
         auto duration_of_truck_num_iter = std::chrono::duration_cast<std::chrono::seconds>(current - start_of_truck_num_iter);
+        
         // wait 4m 30s until exiting
         if (duration.count() > 4*60 + 30) {
-            fprintf(stderr, "Time's up (4m30s)\n");
+            //fprintf(stderr, "Time's up (4m30s)\n");
             return;
         }
 
         if (duration_of_truck_num_iter.count() > 15) {
-            fprintf(stderr, "Time for a truck number iteration exceeded (15s)\n");
+            //char* err = (char*)malloc(100);
+            //sprintf(err, "Time for truck number %d iteration exceeded (15s)\n", used_trucks);
+            //fprintf(stderr, "%s", err);
             break;
         }
         // generate an assignment for used_trucks number of trucks
         this->assignDepotsToTrucks(used_trucks);
         
         for (auto &truck : this->trucks) {
+            
             // solve annealing for each of the trucks
             tmp_solution = truck.solveAnnealing(start_depot, INITIAL_TEMP, MIN_TEMP, COOLING_RATE, MAX_NEIGHBORS);
             
@@ -152,10 +160,9 @@ void Problem::print() {
 }
 
 void Problem::printSolution() {
-    // no feasible solution
+    // no feasible solution, so print -1 as the number of routes
     if (this->routes == 0) {
-        std::cout<<"-1\n";
-        return;
+        this->routes = -1;
     }
     std::cout<<this->routes<<" "<<this->solution_sum<<"\n";
     for (auto &solution_vec : this->solution) {
@@ -249,5 +256,22 @@ void Problem::readFrom(std::string filename) {
         this->depots.pop_back();
         input.close();
         return;
+}
+
+void Problem::preliminaryCheck() {
+    bool valid = true;
+    for (auto &depot : this->depots) {
+        if (depot.ready_time > this->start_depot.end_time)
+            valid = false;
+        if (depot.service_duration > (this->start_depot.end_time - this->start_depot.ready_time))
+            valid = false;
+        if (depot.end_time == this->start_depot.end_time && depot.ready_time + depot.service_duration == depot.end_time)
+            valid = false;
+    }
+    if (!valid) {
+        this->computeSolutionValue();
+        this->printSolution();
+        exit(0);
+    }
 }
 

@@ -26,6 +26,7 @@ public:
     void computeDistances();
     void readFrom(std::string filename);
     void assignDepotsToTrucks(int truck_num);
+    void preliminaryCheck();
     void print();
     void printDistances();
     void solveAnnealing(int INITIAL_TEMP, int MIN_TEMP, float COOLING_RATE, int MAX_NEIGHBORS);
