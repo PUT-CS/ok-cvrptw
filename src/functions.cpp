@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <math.h>
 #include <random>
+#include <vector>
 
 double dist(Depot d1, Depot d2) {
     return std::sqrt(pow((d2.x-d1.x), 2) + std::pow((d2.y-d1.y), 2));
@@ -11,7 +12,7 @@ double dist(Depot d1, Depot d2) {
 // the solution passed to this function always has to be feasible!
 double objective_function(std::vector<Depot> solution) {
     if (solution.empty()) {
-        std::cout<<"Empty solution passed to OF"<<std::endl;
+        //std::cout<<"Empty solution passed to OF"<<std::endl;
         return 0;
     }
     double time = 0;
@@ -41,6 +42,14 @@ double objective_function(std::vector<Depot> solution) {
     }
 
     return time;
+}
+
+double total_solution_value(std::vector<std::vector<Depot>> sol) {
+    double total = 0;
+    for (auto &subsol : sol) {
+        total += objective_function(subsol);
+    }
+    return total;
 }
 
 std::vector<Depot> get_neighboring_solution(std::vector<Depot> input, Depot start, int cargo) {

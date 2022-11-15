@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <cstdio>
 #include <iostream>
 #include <fstream>
 #include <cmath>
@@ -47,21 +48,30 @@ void Problem::assignDepotsToTrucks(int truck_num) {
 
 void Problem::solveAnnealing(int INITIAL_TEMP, int MIN_TEMP, float COOLING_RATE, int MAX_NEIGHBORS) {
     // depot 0 never gets assigned!
-
+    int used_trucks = this->num_of_trucks;
     auto start = std::chrono::high_resolution_clock().now();
     std::vector<Depot> tmp_solution;
-    while (true) {
+    std::vector<std::vector<Depot>> tmp_all_solution;
+    std::vector<std::vector<Depot>> best_all_solution;
+    while (used_trucks > 3) {
+        tmp_all_solution.clear();
+        auto start_of_truck_num_iter = std::chrono::high_resolution_clock().now();
+        std::cout<<used_trucks<<"\n";
     assigning:
         auto current = std::chrono::high_resolution_clock().now();
-        auto duration =
-            std::chrono::duration_cast<std::chrono::seconds>(current - start);
+        auto duration = std::chrono::duration_cast<std::chrono::seconds>(current - start);
+        auto duration_of_truck_num_iter = std::chrono::duration_cast<std::chrono::seconds>(current - start_of_truck_num_iter);
         // wait 4m 30s until exiting
         if (duration.count() > 4*60 + 30) {
-            std::cout << "Time's up" << std::endl;
+            fprintf(stderr, "Time's up (4m30s)\n");
             return;
         }
-        //        std::cout<<duration.count()<<std::endl;
-        this->assignDepotsToTrucks(12);
+
+        if (duration_of_truck_num_iter.count() > 15) {
+            fprintf(stderr, "Time for a truck number iteration exceeded (15s)\n");
+            break;
+        }
+        this->assignDepotsToTrucks(used_trucks);
         for (auto &truck : this->trucks) {
 
             tmp_solution = truck.solveAnnealing(start_depot, INITIAL_TEMP, MIN_TEMP, COOLING_RATE, MAX_NEIGHBORS);
@@ -71,11 +81,19 @@ void Problem::solveAnnealing(int INITIAL_TEMP, int MIN_TEMP, float COOLING_RATE,
                 tmp_solution.clear();
                 goto assigning;
             }
-            this->solution.push_back(tmp_solution);
+            tmp_all_solution.push_back(tmp_solution);
             tmp_solution.clear();
         }
-        break;
+        // on first iteration, assign current as best
+        if (used_trucks == this->num_of_trucks) {
+            best_all_solution = tmp_all_solution;
+        }
+        if (total_solution_value(tmp_all_solution) < total_solution_value(best_all_solution)) {
+            best_all_solution = tmp_all_solution;
+        }
+        used_trucks-- ;
     }
+    this->solution = best_all_solution;
     return;
 }
 

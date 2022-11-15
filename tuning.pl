@@ -54,8 +54,10 @@ for (my $i=0; $i<$#TEMPS; $i++) {
                     $SUM = $SUM + $value_str;
                 }
             }
-            
+            say "Lowest sum: " . $lowest_sum . "\n";
+            say "Sum: " . $SUM . "\n";
             if ($SUM < $lowest_sum) {
+                $lowest_sum = $SUM;
                 $best_temp = $temp;
                 $best_rate = $rate;
                 $best_neighbors = $neighbors;

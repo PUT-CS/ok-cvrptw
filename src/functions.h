@@ -12,6 +12,7 @@ float choose_worse_solution(float temperature, std::vector<Depot> prev,
                             std::vector<Depot> next);
 float roll();
 bool is_solution_feasible(Depot start, std::vector<Depot> solution, int cargo);
+double total_solution_value(std::vector<std::vector<Depot>> sol);
 std::vector<Depot> get_initial_solution(std::vector<Depot> assignment,
                                         int capacity, Depot start);
 void skip(std::ifstream &file, int n);
