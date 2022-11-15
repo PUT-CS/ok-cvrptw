@@ -23,13 +23,12 @@ public:
     double solution_sum = 0;
     int routes = 0;
     bool bad_assignment = true;
-    int randIntInRangeInclusive(int min, int max);
     void computeDistances();
     void readFrom(std::string filename);
     void assignDepotsToTrucks(int truck_num);
     void print();
     void printDistances();
-    void solveAnnealing();
+    void solveAnnealing(int INITIAL_TEMP, int MIN_TEMP, float COOLING_RATE, int MAX_NEIGHBORS);
     void save(int argc, char* argv[]);
     void printSolution();
     void computeSolutionValue();

@@ -35,7 +35,7 @@ void Problem::assignDepotsToTrucks(int truck_num) {
     // `-1` since we are leaving the starting depot as is
     while (tmp_depot_vec.size()-1 != 0) {
 
-        int rand_idx = this->randIntInRangeInclusive(1, tmp_depot_vec.size()-1);
+        int rand_idx = rand_int_in_range_inclusive(1, tmp_depot_vec.size()-1);
         
         // assing the depot, mark it as assigned by removing from tmp_depot_vec
         this->trucks[current_truck_idx].assignment.push_back(tmp_depot_vec[rand_idx]);
@@ -47,7 +47,7 @@ void Problem::assignDepotsToTrucks(int truck_num) {
     }
 }
 
-void Problem::solveAnnealing() {
+void Problem::solveAnnealing(int INITIAL_TEMP, int MIN_TEMP, float COOLING_RATE, int MAX_NEIGHBORS) {
     // depot 0 never gets assigned!
 
     auto start = std::chrono::high_resolution_clock().now();
@@ -63,11 +63,10 @@ void Problem::solveAnnealing() {
             return;
         }
         //        std::cout<<duration.count()<<std::endl;
-        this->assignDepotsToTrucks(10);
+        this->assignDepotsToTrucks(12);
         for (auto &truck : this->trucks) {
 
-            tmp_solution = truck.solveAnnealing(start_depot);
-            
+            tmp_solution = truck.solveAnnealing(start_depot, INITIAL_TEMP, MIN_TEMP, COOLING_RATE, MAX_NEIGHBORS);
             if (tmp_solution.size() == 1 && tmp_solution[0].num == -1) {
                 // the assignment is bad, so break the loop and return to assigning, clear the vectors
                 this->solution.clear();
@@ -151,10 +150,10 @@ void Problem::saveSolutionToFile(char* name) {
 }
 
 void Problem::save(int argc, char* argv[]) {
-    if (argc == 3) {
-        this->saveSolutionToFile(argv[2]);
-        return;
-    }
+    //    if (argc == 3) {
+    //        this->saveSolutionToFile(argv[2]);
+    //        return;
+    //    }
     this->printSolution();
     return;
 }
@@ -176,14 +175,6 @@ void Problem::printDistances() {
         }
         std::cout<<std::endl;
     }
-}
-
-    
-int Problem::randIntInRangeInclusive(int min, int max) {
-    std::random_device rd; // obtain a random number from hardware
-    std::mt19937 gen(rd()); // seed the generator
-    std::uniform_int_distribution<> distr(min, max); // define the range
-    return distr(gen);
 }
 
 void Problem::readFrom(std::string filename) {

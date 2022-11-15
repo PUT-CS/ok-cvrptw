@@ -9,17 +9,16 @@
 #include <algorithm>
 #include <random>
 
-std::vector<Depot> Truck::solveAnnealing(Depot &start) {
+std::vector<Depot> Truck::solveAnnealing(Depot &start, int INITIAL_TEMP, int MIN_TEMP, float COOLING_RATE, int MAX_NEIGHBORS ) {
     // we have to create a feasible route through assigned depots
-
     if (this->assignment.empty()) {
         return this->assignment;
     }
     
-    const int MAX_ITER = 50;
-    const int INITIAL_TEMP = 30000;
-    const int MIN_TEMP = 5;
-    const float COOLING_CONSTANT = 0.99;
+    //    const int MAX_ITER = 50;
+    //    const int INITIAL_TEMP = 30000;
+    //    const int MIN_TEMP = 5;
+    //    const float COOLING_CONSTANT = 0.99;
     float temperature = INITIAL_TEMP;
     int i = 0;
 
@@ -35,13 +34,11 @@ std::vector<Depot> Truck::solveAnnealing(Depot &start) {
     }
     std::vector<Depot> current_solution(initial_solution);
     
-    return current_solution;
-    
     std::vector<Depot> best_solution(current_solution);
-
+    
     while (temperature > MIN_TEMP) {
-        while (i < MAX_ITER) {
-            std::vector<Depot> neighbor_solution = get_neighboring_solution(current_solution, start);
+        while (i < MAX_NEIGHBORS) {
+            std::vector<Depot> neighbor_solution = get_neighboring_solution(current_solution, start, this->capacity);
             if (objective_function(neighbor_solution) <= objective_function(current_solution) ||
                 roll() < choose_worse_solution(temperature, current_solution, neighbor_solution)) {
                 // accept the neighbor
@@ -53,7 +50,7 @@ std::vector<Depot> Truck::solveAnnealing(Depot &start) {
             }
             i++;
         }
-        temperature *= COOLING_CONSTANT;
+        temperature *= COOLING_RATE;
     }
     
     return best_solution;

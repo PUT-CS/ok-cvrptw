@@ -8,7 +8,6 @@ double dist(Depot d1, Depot d2) {
     return std::sqrt(pow((d2.x-d1.x), 2) + std::pow((d2.y-d1.y), 2));
 }
 
-
 // the solution passed to this function always has to be feasible!
 double objective_function(std::vector<Depot> solution) {
     if (solution.empty()) {
@@ -44,14 +43,24 @@ double objective_function(std::vector<Depot> solution) {
     return time;
 }
 
-std::vector<Depot> get_neighboring_solution(std::vector<Depot> input, Depot start) {
+std::vector<Depot> get_neighboring_solution(std::vector<Depot> input, Depot start, int cargo) {
     std::vector<Depot> neighbor(input);
-    /*
-      Operations:
-      - swap
-     */
+    int len = neighbor.size();
+    if (len <= 3) {
+        return input;
+    }
+ rolling:
+    int a_idx = rand_int_in_range_inclusive(1, len-2);
+    int b_idx = rand_int_in_range_inclusive(1, len-2);
+    if (a_idx == b_idx)
+        goto rolling;
     
-    return input;
+    // swap two random elements
+    std::iter_swap(neighbor.begin()+a_idx, neighbor.begin() + b_idx);
+    if (!is_solution_feasible(start, neighbor, cargo)) {
+        return input;
+    }
+    return neighbor;
 }
 
 float choose_worse_solution(float temperature, std::vector<Depot> prev, std::vector<Depot> next) {
@@ -153,4 +162,11 @@ void skip(std::ifstream &file, int n) {
     std::string buf;
     for (int i=0; i<n; i++)
         file>>buf;
+}
+
+int rand_int_in_range_inclusive(int min, int max) {
+    std::random_device rd; // obtain a random number from hardware
+    std::mt19937 gen(rd()); // seed the generator
+    std::uniform_int_distribution<> distr(min, max); // define the range
+    return distr(gen);
 }
