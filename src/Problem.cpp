@@ -49,14 +49,20 @@ void Problem::assignDepotsToTrucks(int truck_num) {
 void Problem::solveAnnealing(int INITIAL_TEMP, int MIN_TEMP, float COOLING_RATE, int MAX_NEIGHBORS) {
     // depot 0 never gets assigned!
     int used_trucks = this->num_of_trucks;
+
+    // start measuring overall time of annealing
     auto start = std::chrono::high_resolution_clock().now();
+    
     std::vector<Depot> tmp_solution;
     std::vector<std::vector<Depot>> tmp_all_solution;
     std::vector<std::vector<Depot>> best_all_solution;
+
+    // attempt to use truck numbers all the way from num_of_trucks down to 3
     while (used_trucks > 3) {
         tmp_all_solution.clear();
+        // start measuring time in the current truck number
         auto start_of_truck_num_iter = std::chrono::high_resolution_clock().now();
-        //std::cout<<used_trucks<<"\n";
+        // assigning procedure
     assigning:
         auto current = std::chrono::high_resolution_clock().now();
         auto duration = std::chrono::duration_cast<std::chrono::seconds>(current - start);
@@ -71,16 +77,20 @@ void Problem::solveAnnealing(int INITIAL_TEMP, int MIN_TEMP, float COOLING_RATE,
             fprintf(stderr, "Time for a truck number iteration exceeded (15s)\n");
             break;
         }
+        // generate an assignment for used_trucks number of trucks
         this->assignDepotsToTrucks(used_trucks);
+        
         for (auto &truck : this->trucks) {
-
+            // solve annealing for each of the trucks
             tmp_solution = truck.solveAnnealing(start_depot, INITIAL_TEMP, MIN_TEMP, COOLING_RATE, MAX_NEIGHBORS);
+            
             if (tmp_solution.size() == 1 && tmp_solution[0].num == -1) {
                 // the assignment is bad, so break the loop and return to assigning, clear the vectors
                 this->solution.clear();
                 tmp_solution.clear();
                 goto assigning;
             }
+            // save the partial solution
             tmp_all_solution.push_back(tmp_solution);
             tmp_solution.clear();
         }
@@ -88,11 +98,14 @@ void Problem::solveAnnealing(int INITIAL_TEMP, int MIN_TEMP, float COOLING_RATE,
         if (used_trucks == this->num_of_trucks) {
             best_all_solution = tmp_all_solution;
         }
+        // if the solution for the current truck number is better than our best solution, overwrite the best
         if (total_solution_value(tmp_all_solution) < total_solution_value(best_all_solution)) {
             best_all_solution = tmp_all_solution;
         }
+        // decrease the number of used trucks
         used_trucks-- ;
     }
+    // save the best solution to an attribute so it can be computed and printed later
     this->solution = best_all_solution;
     return;
 }

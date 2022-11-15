@@ -37,17 +37,12 @@ for (my $i=0; $i<$#TEMPS; $i++) {
         my $rate = $COOLING_RATES[$j];
         say "Current Cooling Rate: " . $rate;
         my $SUM = 0.0;
-
-#        for (my $k=0; $k<$#MAX_NEIGHBORS; $k++) {
- #           my $neighbors = $MAX_NEIGHBORS[$k];
-  #          say "Current Neighbor Num: " . $neighbors;
-            #perform all the tests
+        
         for (my $l = 0; $l<@LETTERS; $l++) {
             my $letter = $LETTERS[$l];
             for (my $m = 0; $m<@NUM; $m++) {
                 my $num = $NUM[$m];
                 my $filename = $letter . $num;
-                #say "./cvrptw data/$filename.txt $temp 5 $rate $neighbors";
                 my $output = `./cvrptw data/$filename.txt $temp 5 $rate 40`;
                 my $value_str = `echo '$output' | head -n 1 | awk '{print \$2}'`;
                 $SUM = $SUM + $value_str;

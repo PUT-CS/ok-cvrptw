@@ -15,13 +15,10 @@ std::vector<Depot> Truck::solveAnnealing(Depot &start, int INITIAL_TEMP, int MIN
         return this->assignment;
     }
     
-    //    const int MAX_ITER = 50;
-    //    const int INITIAL_TEMP = 30000;
-    //    const int MIN_TEMP = 5;
-    //    const float COOLING_CONSTANT = 0.99;
     float temperature = INITIAL_TEMP;
     int i = 0;
 
+    // generate a random, feasible solution
     std::vector<Depot> initial_solution = get_initial_solution(this->assignment, this->capacity, start);
 
     // check if the initial solution was found within the specified iteration limit
@@ -32,6 +29,7 @@ std::vector<Depot> Truck::solveAnnealing(Depot &start, int INITIAL_TEMP, int MIN
         std::vector<Depot> v{d};
         return v;
     }
+    
     std::vector<Depot> current_solution(initial_solution);
     std::vector<Depot> best_solution(current_solution);
     
