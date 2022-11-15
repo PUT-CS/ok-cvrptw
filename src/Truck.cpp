@@ -33,7 +33,6 @@ std::vector<Depot> Truck::solveAnnealing(Depot &start, int INITIAL_TEMP, int MIN
         return v;
     }
     std::vector<Depot> current_solution(initial_solution);
-    
     std::vector<Depot> best_solution(current_solution);
     
     while (temperature > MIN_TEMP) {
@@ -52,7 +51,6 @@ std::vector<Depot> Truck::solveAnnealing(Depot &start, int INITIAL_TEMP, int MIN
         }
         temperature *= COOLING_RATE;
     }
-    
     return best_solution;
 }
 

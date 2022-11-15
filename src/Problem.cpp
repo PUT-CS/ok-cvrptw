@@ -67,7 +67,7 @@ void Problem::solveAnnealing(int INITIAL_TEMP, int MIN_TEMP, float COOLING_RATE,
             return;
         }
 
-        if (duration_of_truck_num_iter.count() > 3) {
+        if (duration_of_truck_num_iter.count() > 15) {
             fprintf(stderr, "Time for a truck number iteration exceeded (15s)\n");
             break;
         }

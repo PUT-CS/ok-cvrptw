@@ -13,11 +13,15 @@ int main(int argc, char* argv[]) {
 	fprintf(stderr, "Please provide a file as an argument");
 	exit(1);
     }
-    
-    const int INITIAL_TEMP = std::stoi(argv[2]);
-    const int MIN_TEMP = std::stoi(argv[3]);
-    const float COOLING_RATE = std::stof(argv[4]);
-    const int MAX_NEIGHBORS = std::stoi(argv[5]);
+
+    const int INITIAL_TEMP = 600000;
+    const int MIN_TEMP = 5;
+    const float COOLING_RATE = 0.97;
+    const int MAX_NEIGHBORS = 40;
+    //    const int INITIAL_TEMP = std::stoi(argv[2]);
+    //    const int MIN_TEMP = std::stoi(argv[3]);
+    //    const float COOLING_RATE = std::stof(argv[4]);
+    //    const int MAX_NEIGHBORS = std::stoi(argv[5]);
 
     //    std::cout<<"INITIAL_TEMP = "<<INITIAL_TEMP<<"\n";
     //    std::cout<<"MIN_TEMP = "<<MIN_TEMP<<"\n";
