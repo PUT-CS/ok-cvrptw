@@ -56,7 +56,7 @@ void Problem::solveAnnealing(int INITIAL_TEMP, int MIN_TEMP, float COOLING_RATE,
     while (used_trucks > 3) {
         tmp_all_solution.clear();
         auto start_of_truck_num_iter = std::chrono::high_resolution_clock().now();
-        std::cout<<used_trucks<<"\n";
+        //std::cout<<used_trucks<<"\n";
     assigning:
         auto current = std::chrono::high_resolution_clock().now();
         auto duration = std::chrono::duration_cast<std::chrono::seconds>(current - start);
@@ -67,7 +67,7 @@ void Problem::solveAnnealing(int INITIAL_TEMP, int MIN_TEMP, float COOLING_RATE,
             return;
         }
 
-        if (duration_of_truck_num_iter.count() > 15) {
+        if (duration_of_truck_num_iter.count() > 3) {
             fprintf(stderr, "Time for a truck number iteration exceeded (15s)\n");
             break;
         }
