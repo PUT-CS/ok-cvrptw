@@ -178,6 +178,8 @@ void Problem::saveSolutionToFile(char* name) {
     out.close();
 }
 
+// ignore warnings about unused parameters for disabled functionality
+#pragma GCC diagnostic ignored "-Wunused-parameter"
 void Problem::save(int argc, char* argv[]) {
     //    if (argc == 3) {
     //        this->saveSolutionToFile(argv[2]);
@@ -195,6 +197,7 @@ void Problem::computeDistances() {
         }
         this->distances.push_back(n_row);
     }
+    return;
 }
 
 void Problem::printDistances() {
@@ -204,6 +207,7 @@ void Problem::printDistances() {
         }
         std::cout<<std::endl;
     }
+    return;
 }
 
 void Problem::readFrom(std::string filename) {
@@ -232,5 +236,6 @@ void Problem::readFrom(std::string filename) {
         }
         this->depots.pop_back();
         input.close();
+        return;
 }
 
