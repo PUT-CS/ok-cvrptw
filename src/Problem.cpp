@@ -57,8 +57,8 @@ void Problem::solveAnnealing(int INITIAL_TEMP, int MIN_TEMP, float COOLING_RATE,
     std::vector<std::vector<Depot>> tmp_all_solution;
     std::vector<std::vector<Depot>> best_all_solution;
 
-    // attempt to use truck numbers all the way from num_of_trucks down to 3
-    while (used_trucks > 3) {
+    // attempt to use truck numbers all the way from num_of_trucks down to 1
+    while (used_trucks > 0) {
         tmp_all_solution.clear();
         // start measuring time in the current truck number
         auto start_of_truck_num_iter = std::chrono::high_resolution_clock().now();
@@ -152,6 +152,11 @@ void Problem::print() {
 }
 
 void Problem::printSolution() {
+    // no feasible solution
+    if (this->routes == 0) {
+        std::cout<<"-1\n";
+        return;
+    }
     std::cout<<this->routes<<" "<<this->solution_sum<<"\n";
     for (auto &solution_vec : this->solution) {
         if (solution_vec.empty())
@@ -166,6 +171,13 @@ void Problem::printSolution() {
 void Problem::saveSolutionToFile(char* name) {
     std::ofstream out;
     out.open(name);
+
+    // no feasible solution
+    if (this->routes == 0) {
+        out<<"-1\n";
+        return;
+    }
+    
     out<<this->routes<<" "<<this->solution_sum<<"\n";
     for (auto &solution_vec : this->solution) {
         if (solution_vec.empty())
