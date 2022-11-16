@@ -23,6 +23,7 @@ public:
     double solution_sum = 0;
     int routes = 0;
     bool bad_assignment = true;
+    bool visualize = false;
     void computeDistances();
     void readFrom(std::string filename);
     void assignDepotsToTrucks(int truck_num);
@@ -34,6 +35,7 @@ public:
     void printSolution();
     void computeSolutionValue();
     void saveSolutionToFile(char* name);
+    void visualizeSolution(char* filename);
 };
 
 #endif

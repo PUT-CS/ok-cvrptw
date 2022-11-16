@@ -1,6 +1,7 @@
 #include <algorithm>
 #include <cstdio>
 #include <cstdlib>
+#include <cstring>
 #include <iostream>
 #include <fstream>
 #include <cmath>
@@ -275,3 +276,48 @@ void Problem::preliminaryCheck() {
     }
 }
 
+void Problem::visualizeSolution(char* filename) {
+
+    if (this->solution.empty()) {
+        return;
+    }
+    
+    // generate files for gnuplot which contain points of every route;
+    std::vector<std::string> files;
+    std::system("rm -rf vis/ > /dev/null 2> /dev/null");
+    std::system("mkdir vis/ 2> /dev/null > /dev/null");
+    std::system((std::string("./gen_tmp.sh ") + std::string(filename) + std::string(" > /dev/null 2> /dev/null")).c_str());
+    std::string dirname = "vis/";
+    std::string command = "gnuplot -p -e \"set nokey; set xlabel 'x'; set ylabel 'y'; plot 'vis/tmp' every ::1 w p pt 7 ps 1,  '< cat vis/tmp | head -n 1' w p lw 5 pt 7 ps 2, ";
+
+    int color_num = 1;
+    
+    for (unsigned long int i=0; i<this->solution.size(); i++) {
+        auto &route = this->solution[i];
+
+        if (route.empty())
+            continue;
+        
+        std::ofstream out;
+        out.open(dirname + std::to_string(i));
+
+        for (auto &depot : route) {
+            out<<depot.x<<" "<<depot.y<<"\n";
+        }
+
+        files.push_back(std::to_string(i));
+
+        char buff[200];
+        snprintf(buff, sizeof(buff), " '%s' using 1:2 w lp lc %d, ", (std::string("vis/") + std::to_string(i)).c_str(), color_num);
+        std::string buffAsStdStr = buff;
+        command += buffAsStdStr;
+        color_num++;
+        out.close();
+    }
+    
+    command.pop_back();
+    command.pop_back();
+    command.push_back('"');
+    std::system(command.c_str());
+    std::system("rm -rf vis > /dev/null 2> /dev/null");
+}
