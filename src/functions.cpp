@@ -12,7 +12,6 @@ double dist(Depot d1, Depot d2) {
 // the solution passed to this function always has to be feasible!
 double objective_function(std::vector<Depot> solution) {
     if (solution.empty()) {
-        //std::cout<<"Empty solution passed to OF"<<std::endl;
         return 0;
     }
     double time = 0;
@@ -87,17 +86,11 @@ bool is_solution_feasible(Depot start, std::vector<Depot> solution, int cargo) {
         return true;
     }
     double time = 0;
-
-    //    std::cout<<"Checking feasibility of\n";
-    //    print_depot_vec(solution);
     
     Depot current_depot = start;
     
     // go from the start to the first assigned depot
-    //time += dist(start, current_depot);
-    // cout<<"Arrived at first assigned depot at "<<time<<endl;
     Depot next_depot;
-    //std::cout<<"IN LOOP "<<solution.size()<<std::endl;
     for (unsigned long int i = 0; i<solution.size(); i++) {
         // select the target depot
         next_depot = solution[i];
@@ -107,33 +100,26 @@ bool is_solution_feasible(Depot start, std::vector<Depot> solution, int cargo) {
         // go from the current town to the next depot
         current_depot = next_depot;
         
-        //      cout<<"at depot "<<current_depot.num<<" on time: "<<time<<endl;
-
         // the truck came too early so we fast forward the time
         if (time < current_depot.ready_time) {
             time = current_depot.ready_time;
-            //  cout<<"Came early, waited until "<<time<<endl;
         }
 
         // the truck came too late
         if (time > current_depot.end_time) {
-            //      std::cout<<"Failed at truck beign late to depot "<<current_depot.num<<std::endl;
-            //      cout<<"Depot "<<current_depot.num<<" closed at "<<current_depot.end_time<<" and time is "<<time<<endl;
             return false;
         }
 
         // there's not enough cargo to serve the depot
         if (cargo < current_depot.demand) {
-            //   std::cout<<"Failed at not enough cargo at depot "<<current_depot.num<<std::endl;
             return false;
         }
 
         // unload the truck
         time += current_depot.service_duration;
-        //      cout<<"Finished service at "<<current_depot.num<<" at "<<time<<endl;
+        
         // take the cargo
         cargo -= current_depot.demand;
-        
     }
     return true;
 }

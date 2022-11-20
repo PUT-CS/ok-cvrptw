@@ -2,8 +2,6 @@
 #include "Depot.h"
 #include "functions.h"
 #include <cmath>
-#include <cstdlib>
-#include <exception>
 #include <iostream>
 #include <vector>
 #include <algorithm>

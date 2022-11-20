@@ -1,7 +1,4 @@
-#include <cstdlib>
-#include <cstring>
 #include <iostream>
-#include <set>
 #include <string>
 #include "Problem.h"
 #include "functions.h"
@@ -16,7 +13,7 @@ int main(int argc, char* argv[]) {
         std::cout<<"Usage:\n";
         std::cout<<"cvrptw FILE [INITIAL_TEMPERATURE] [MINIMAL_TEMPERATURE] [COOLING_RATE] [MAX_NEIGHBORS]\n\n";
         std::cout<<"Finds solutions to the Capacitated Vehicle Routing Problem With Time Windows by using simulated annealing.\n"
-            "Outputs '-1' if a valid solution could not be found within time limits\n"
+            "Outputs '-1' as the number of routes if a valid solution could not be found within set time limits\n"
             "Provided input files must be proper Salomon formatted instances\n";
         exit(0);
     }
