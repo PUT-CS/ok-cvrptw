@@ -1,20 +1,17 @@
 #include <cstdlib>
 #include <cstring>
 #include <iostream>
+#include <set>
 #include <string>
 #include "Problem.h"
+#include "functions.h"
 
 int main(int argc, char* argv[]) {
-    // 1 - input file
-    // 2 - INITIAL_TEMP
-    // 3 - MIN_TEMP
-    // 4 - COOLING_RATE
-    // 5 - MAX_NEIGHBORS
     if (argc == 1) {
-	fprintf(stderr, "Please provide a file as an argument");
+        fprintf(stderr, "Please provide a file as an argument");
 	exit(1);
     }
-
+    
     if (std::string(argv[1]) == "--help") {
         std::cout<<"Usage:\n";
         std::cout<<"cvrptw FILE [INITIAL_TEMPERATURE] [MINIMAL_TEMPERATURE] [COOLING_RATE] [MAX_NEIGHBORS]\n\n";
@@ -23,7 +20,7 @@ int main(int argc, char* argv[]) {
             "Provided input files must be proper Salomon formatted instances\n";
         exit(0);
     }
-
+    
     // default values
     int INITIAL_TEMP = 600000;
     int MIN_TEMP = 5;
@@ -37,10 +34,12 @@ int main(int argc, char* argv[]) {
         MIN_TEMP = std::stoi(argv[3]);
         COOLING_RATE = std::stof(argv[4]);
         MAX_NEIGHBORS = std::stoi(argv[5]);
-    } else if (argc == 3 && (strcmp("--visualize", argv[2]) || strcmp("-vis", argv[2]))) {
+    } else if (argc == 3 &&
+               (std::string(argv[2]) == std::string("--visualize") ||
+                std::string(argv[2]) == std::string("-v"))) {
         problem.visualize = true;
     }
-
+    
     srand(time(0));
     problem.readFrom(argv[1]);
     problem.preliminaryCheck();
@@ -49,6 +48,6 @@ int main(int argc, char* argv[]) {
     if (problem.visualize)
         problem.visualizeSolution(argv[1]);
     problem.save(argc, argv);
-
+    
     return 0;
 }
