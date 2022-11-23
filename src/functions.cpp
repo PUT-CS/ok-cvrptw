@@ -10,7 +10,7 @@ double dist(Depot d1, Depot d2) {
 }
 
 // the solution passed to this function always has to be feasible!
-double objective_function(std::vector<Depot> solution) {
+double objective_function(std::vector<Depot> &solution) {
     if (solution.empty()) {
         return 0;
     }
@@ -51,7 +51,7 @@ double total_solution_value(std::vector<std::vector<Depot>> sol) {
     return total;
 }
 
-std::vector<Depot> get_neighboring_solution(std::vector<Depot> input, Depot start, int cargo) {
+std::vector<Depot> get_neighboring_solution(std::vector<Depot> &input, Depot start, int cargo) {
     std::vector<Depot> neighbor(input);
     int len = neighbor.size();
     if (len <= 3) {
@@ -71,13 +71,13 @@ std::vector<Depot> get_neighboring_solution(std::vector<Depot> input, Depot star
     return neighbor;
 }
 
-float choose_worse_solution(float temperature, std::vector<Depot> prev, std::vector<Depot> next) {
+float choose_worse_solution(float temperature, std::vector<Depot> &prev, std::vector<Depot> &next) {
     return std::exp((-1 *objective_function(next) - objective_function(prev)) / temperature);
 }
 
 float roll() { return ((double)rand() / (RAND_MAX)); }
 
-bool is_solution_feasible(Depot start, std::vector<Depot> solution, int cargo) {
+bool is_solution_feasible(Depot start, std::vector<Depot> &solution, int cargo) {
 
     using std::cout, std::endl;
     
@@ -124,7 +124,7 @@ bool is_solution_feasible(Depot start, std::vector<Depot> solution, int cargo) {
     return true;
 }
 
-std::vector<Depot> get_initial_solution(std::vector<Depot> assignment, int capacity, Depot start) {
+std::vector<Depot> get_initial_solution(std::vector<Depot> &assignment, int capacity, Depot start) {
     std::random_device rd;
     std::mt19937 gen(rd());
     

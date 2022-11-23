@@ -1,6 +1,6 @@
 CC=g++
 NAME=cvrptw
-CC_FLAGS=-o $(NAME) -Wall -Wextra
+CC_FLAGS=-o $(NAME) -Wall -Wextra -O3
 DEPS=src/Problem.cpp src/Depot.cpp src/Truck.cpp src/functions.cpp
 
 .PHONY: test clean

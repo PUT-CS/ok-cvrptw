@@ -6,3 +6,6 @@ description/
 #*
 time_helper_util/target/*
 solutions/*
+sprawozdanie/*
+.gitignore.save
+callgrind*

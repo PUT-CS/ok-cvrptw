@@ -14,7 +14,6 @@ std::vector<Depot> Truck::solveAnnealing(Depot &start, int INITIAL_TEMP, int MIN
     }
     
     float temperature = INITIAL_TEMP;
-    int i = 0;
 
     // generate a random, feasible solution
     std::vector<Depot> initial_solution = get_initial_solution(this->assignment, this->capacity, start);
@@ -28,26 +27,31 @@ std::vector<Depot> Truck::solveAnnealing(Depot &start, int INITIAL_TEMP, int MIN
         return v;
     }
     
-    std::vector<Depot> current_solution(initial_solution);
-    std::vector<Depot> best_solution(current_solution);
-    
+    std::vector<Depot> current = initial_solution;
+    std::vector<Depot> best = current;
+
     while (temperature > MIN_TEMP) {
+        int i = 0;
+        // przeszukaj MAX_NEIGHBORS sąsiadów obecnego rozwiązania
         while (i < MAX_NEIGHBORS) {
-            std::vector<Depot> neighbor_solution = get_neighboring_solution(current_solution, start, this->capacity);
-            if (objective_function(neighbor_solution) <= objective_function(current_solution) ||
-                roll() < choose_worse_solution(temperature, current_solution, neighbor_solution)) {
+            //            std::cout<<"ENTERED"<<std::endl;
+            auto neighbor =
+                get_neighboring_solution(current, start, this->capacity);
+            
+            if (objective_function(neighbor) <= objective_function(current) ||
+                roll() < choose_worse_solution(temperature, current, neighbor)) {
                 // accept the neighbor
-                current_solution.assign(neighbor_solution.begin(), neighbor_solution.end());
+                current = neighbor;
                 
-                if (objective_function(current_solution) <= objective_function(best_solution)) {
-                    best_solution.assign(current_solution.begin(), current_solution.end());
-                }
+                if (objective_function(current) <= objective_function(best))
+                    best = current;
             }
             i++;
         }
+        // oblicz t_{i+1}
         temperature *= COOLING_RATE;
     }
-    return best_solution;
+    return best;
 }
 
 void Truck::print() {

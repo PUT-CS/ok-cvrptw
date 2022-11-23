@@ -5,15 +5,15 @@
 #include <fstream>
 #include <vector>
 double dist(Depot d1, Depot d2);
-double objective_function(std::vector<Depot> solution);
-std::vector<Depot> get_neighboring_solution(std::vector<Depot> input,
+double objective_function(std::vector<Depot> &solution);
+std::vector<Depot> get_neighboring_solution(std::vector<Depot> &input,
                                             Depot start, int cargo);
-float choose_worse_solution(float temperature, std::vector<Depot> prev,
-                            std::vector<Depot> next);
+float choose_worse_solution(float temperature, std::vector<Depot> &prev,
+                            std::vector<Depot> &next);
 float roll();
-bool is_solution_feasible(Depot start, std::vector<Depot> solution, int cargo);
+bool is_solution_feasible(Depot start, std::vector<Depot> &solution, int cargo);
 double total_solution_value(std::vector<std::vector<Depot>> sol);
-std::vector<Depot> get_initial_solution(std::vector<Depot> assignment,
+std::vector<Depot> get_initial_solution(std::vector<Depot> &assignment,
                                         int capacity, Depot start);
 void skip(std::ifstream &file, int n);
 void print_depot_vec(std::vector<Depot> &v);

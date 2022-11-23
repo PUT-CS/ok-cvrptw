@@ -19,10 +19,10 @@ int main(int argc, char* argv[]) {
     }
     
     // default values
-    int INITIAL_TEMP = 600000;
+    int INITIAL_TEMP = 10000;
     int MIN_TEMP = 5;
-    double COOLING_RATE = 0.97;
-    int MAX_NEIGHBORS = 50;
+    double COOLING_RATE = 0.95;
+    int MAX_NEIGHBORS = 10;
     
     Problem problem;
     
