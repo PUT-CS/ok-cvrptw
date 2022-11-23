@@ -34,7 +34,6 @@ std::vector<Depot> Truck::solveAnnealing(Depot &start, int INITIAL_TEMP, int MIN
         int i = 0;
         // przeszukaj MAX_NEIGHBORS sąsiadów obecnego rozwiązania
         while (i < MAX_NEIGHBORS) {
-            //            std::cout<<"ENTERED"<<std::endl;
             auto neighbor =
                 get_neighboring_solution(current, start, this->capacity);
             

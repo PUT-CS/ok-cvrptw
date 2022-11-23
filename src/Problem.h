@@ -25,7 +25,7 @@ public:
     bool bad_assignment = true;
     bool visualize = false;
     void computeDistances();
-    void readFrom(std::string filename);
+    void readFrom(std::string filename, int depot_count);
     void assignDepotsToTrucks(int truck_num);
     void preliminaryCheck();
     void print();
