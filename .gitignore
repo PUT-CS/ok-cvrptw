@@ -10,3 +10,4 @@ sprawozdanie/*
 .gitignore.save
 callgrind*
 vgcore*
+performance_tests/*

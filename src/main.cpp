@@ -41,7 +41,7 @@ int main(int argc, char* argv[]) {
     problem.computeSolutionValue();
     if (problem.visualize)
         problem.visualizeSolution(argv[1]);
-    problem.save(argc, argv);
+    //problem.save(argc, argv);
 
     auto program_end = std::chrono::high_resolution_clock().now();
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(program_end - program_start);
