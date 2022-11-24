@@ -8,5 +8,4 @@ void Depot::print()
     cout << "Demand: " << demand << endl;
     cout << "Ready: " << ready_time << ", Close: " << end_time << endl;
     cout << "Service Duration: " << service_duration << endl;
-    cout << "Angle: " << angle << ", Distance: " << dist << endl;
 }

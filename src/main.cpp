@@ -34,27 +34,14 @@ int main(int argc, char* argv[]) {
     
     Problem problem;
     
-    // if (argc == 6) {
-    //     INITIAL_TEMP = std::stoi(argv[2]);
-    //     MIN_TEMP = std::stoi(argv[3]);
-    //     COOLING_RATE = std::stof(argv[4]);
-    //     MAX_NEIGHBORS = std::stoi(argv[5]);
-    // } else if (argc == 3 &&
-    //            (std::string(argv[2]) == std::string("--visualize") ||
-    //             std::string(argv[2]) == std::string("-v"))) {
-    //     problem.visualize = true;
-    // }
-    
     srand(time(0));
     problem.readFrom(argv[1], depot_count);
-    problem.print();
-    return 0;
     problem.preliminaryCheck();
     problem.solveAnnealing(INITIAL_TEMP, MIN_TEMP, COOLING_RATE, MAX_NEIGHBORS);
     problem.computeSolutionValue();
     if (problem.visualize)
         problem.visualizeSolution(argv[1]);
-    //problem.save(argc, argv);
+    problem.save(argc, argv);
 
     auto program_end = std::chrono::high_resolution_clock().now();
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(program_end - program_start);

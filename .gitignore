@@ -9,3 +9,4 @@ solutions/*
 sprawozdanie/*
 .gitignore.save
 callgrind*
+vgcore*

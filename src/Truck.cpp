@@ -66,7 +66,10 @@ void Truck::print() {
     }
 }
 
-Truck::Truck(int c) { this->capacity = c; }
+Truck::Truck(int c) {
+    this->capacity = c;
+    this->assignment.reserve(1001);
+}
 
 Truck::~Truck() {}
 
