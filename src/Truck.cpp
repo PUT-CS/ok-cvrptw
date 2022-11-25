@@ -1,5 +1,6 @@
 #include "Truck.h"
 #include "Depot.h"
+#include "Problem.h"
 #include "functions.h"
 #include <cmath>
 #include <iostream>
@@ -7,7 +8,7 @@
 #include <algorithm>
 #include <random>
 
-std::vector<Depot> Truck::solveAnnealing(Depot &start, int INITIAL_TEMP, int MIN_TEMP, float COOLING_RATE, int MAX_NEIGHBORS ) {
+std::vector<Depot> Truck::solveAnnealing(Depot &start, int INITIAL_TEMP, int MIN_TEMP, float COOLING_RATE, int MAX_NEIGHBORS, double* random_sol) {
     // we have to create a feasible route through assigned depots
     if (this->assignment.empty()) {
         return this->assignment;
@@ -26,10 +27,14 @@ std::vector<Depot> Truck::solveAnnealing(Depot &start, int INITIAL_TEMP, int MIN
         std::vector<Depot> v{d};
         return v;
     }
+
+    //    std::cout<<"BEFORE: "<<objective_function(initial_solution)<<"\n";
     
     std::vector<Depot> current = initial_solution;
     std::vector<Depot> best = current;
 
+    *random_sol += objective_function(initial_solution);
+    
     while (temperature > MIN_TEMP) {
         int i = 0;
         // przeszukaj MAX_NEIGHBORS sąsiadów obecnego rozwiązania

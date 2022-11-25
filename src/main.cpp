@@ -7,11 +7,9 @@
 
 int main(int argc, char* argv[]) {
 
-    auto program_start = std::chrono::high_resolution_clock().now();
-    
     if (argc == 1) {
         fprintf(stderr, "Please provide a file as an argument");
-	exit(1);
+        exit(1);
     }
     
     if (std::string(argv[1]) == "--help") {
@@ -41,11 +39,7 @@ int main(int argc, char* argv[]) {
     problem.computeSolutionValue();
     if (problem.visualize)
         problem.visualizeSolution(argv[1]);
-    //problem.save(argc, argv);
-
-    auto program_end = std::chrono::high_resolution_clock().now();
-    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(program_end - program_start);
-    std::cout<<duration.count()<<std::endl;
+    problem.save(argc, argv);
     
     return 0;
 }

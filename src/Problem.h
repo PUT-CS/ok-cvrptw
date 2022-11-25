@@ -5,22 +5,17 @@
 #include <vector>
 #include "Truck.h"
 #include "Depot.h"
-/*
-      std::random_device rd; // obtain a random number from hardware
-    std::mt19937 gen(rd()); // seed the generator
-    std::uniform_int_distribution<> distr(25, 63); // define the range
 
- */
 class Problem {
 public:
     int num_of_trucks, truck_capacity;
-    double min_angle, max_angle;
     std::vector<Depot> depots;
     std::vector<Truck> trucks;
     Depot start_depot;
     std::vector<std::vector<Depot>> solution;
     std::vector<std::vector<double>> distances;
     double solution_sum = 0;
+    double before_annealing = 0;
     int routes = 0;
     bool bad_assignment = true;
     bool visualize = false;
