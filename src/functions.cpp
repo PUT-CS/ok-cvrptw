@@ -150,7 +150,6 @@ void print_depot_vec(std::vector<Depot> &v) {
     for (auto &d : v) {
         cout<<d.num<<" ";
     }
-    cout<<endl;
 }
 
 void skip(std::ifstream &file, int n) {

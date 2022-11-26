@@ -48,6 +48,7 @@ std::vector<Depot> Truck::solveAnnealing(Depot &start, int INITIAL_TEMP, int MIN
             }
             i++;
         }
+
         // oblicz t_{i+1}
         temperature *= COOLING_RATE;
     }
