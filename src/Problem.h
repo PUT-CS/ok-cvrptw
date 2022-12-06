@@ -31,6 +31,7 @@ public:
     void print();
     void printDistances();
     void solveAnnealing(int INITIAL_TEMP, int MIN_TEMP, float COOLING_RATE, int MAX_NEIGHBORS);
+    void solveTabuSearch(int MAX_FREQENCY, int MAX_TABU_SIZE);
     void save(int argc, char* argv[]);
     void printSolution();
     void computeSolutionValue();

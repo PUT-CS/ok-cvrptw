@@ -28,6 +28,8 @@ int main(int argc, char* argv[])
     int MIN_TEMP = 5;
     double COOLING_RATE = 0.95;
     int MAX_NEIGHBORS = 10;
+    int MAX_FREQUENCY = 1000;
+    int MAX_TABU_SIZE = 20;
 
     Problem problem;
 
@@ -36,6 +38,9 @@ int main(int argc, char* argv[])
         MIN_TEMP = std::stoi(argv[3]);
         COOLING_RATE = std::stof(argv[4]);
         MAX_NEIGHBORS = std::stoi(argv[5]);
+    } else if (argc == 4) {
+        MAX_FREQUENCY = std::stoi(argv[2]);
+        MAX_TABU_SIZE = std::stoi(argv[3]);
     } else if (argc == 3 && (std::string(argv[2]) == std::string("--visualize") || std::string(argv[2]) == std::string("-v"))) {
         problem.visualize = true;
     }
@@ -43,7 +48,8 @@ int main(int argc, char* argv[])
     srand(time(0));
     problem.readFrom(argv[1]);
     problem.preliminaryCheck();
-    problem.solveAnnealing(INITIAL_TEMP, MIN_TEMP, COOLING_RATE, MAX_NEIGHBORS);
+    problem.solveTabuSearch(MAX_FREQUENCY, MAX_TABU_SIZE);
+    //problem.solveAnnealing(INITIAL_TEMP, MIN_TEMP, COOLING_RATE, MAX_NEIGHBORS);
     problem.computeSolutionValue();
     if (problem.visualize)
         problem.visualizeSolution(argv[1]);

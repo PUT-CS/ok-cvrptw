@@ -174,3 +174,20 @@ int rand_int_in_range_inclusive(int min, int max)
     std::uniform_int_distribution<> distr(min, max); // define the range
     return distr(gen);
 }
+
+std::vector<int> toIntVector(std::vector<Depot> &solution) {
+    std::vector<int> result;
+    for (auto &d: solution) {
+        result.push_back(d.num);
+    }
+    return result;
+}
+
+bool is_tabu(std::deque<std::vector<int>> tabuList, std::vector<int> neighbor_inted){
+    for (auto &d: tabuList) {
+        if (&d == &neighbor_inted) {
+            return true;
+        }
+    }
+    return false;
+}
