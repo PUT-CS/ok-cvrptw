@@ -1,10 +1,14 @@
 #include "Problem.h"
 #include "functions.h"
+#include <bits/chrono.h>
+#include <chrono>
 #include <iostream>
 #include <string>
 
 int main(int argc, char* argv[])
 {
+    auto program_start = std::chrono::high_resolution_clock().now();
+    
     if (argc == 1) {
         fprintf(stderr, "Please provide a file as an argument");
         exit(1);
@@ -44,6 +48,9 @@ int main(int argc, char* argv[])
     if (problem.visualize)
         problem.visualizeSolution(argv[1]);
     problem.save(argc, argv);
+    auto program_end = std::chrono::high_resolution_clock().now();
+    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(program_end - program_start);
+    //std::cout<<duration.count()<<std::endl;
 
     return 0;
 }
