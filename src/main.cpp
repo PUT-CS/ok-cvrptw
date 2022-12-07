@@ -31,17 +31,19 @@ int main(int argc, char* argv[])
 
     Problem problem;
 
-    if (argc == 6) {
-        INITIAL_TEMP = std::stoi(argv[2]);
-        MIN_TEMP = std::stoi(argv[3]);
-        COOLING_RATE = std::stof(argv[4]);
-        MAX_NEIGHBORS = std::stoi(argv[5]);
-    } else if (argc == 3 && (std::string(argv[2]) == std::string("--visualize") || std::string(argv[2]) == std::string("-v"))) {
-        problem.visualize = true;
-    }
+    // if (argc == 6) {
+    //     INITIAL_TEMP = std::stoi(argv[2]);
+    //     MIN_TEMP = std::stoi(argv[3]);
+    //     COOLING_RATE = std::stof(argv[4]);
+    //     MAX_NEIGHBORS = std::stoi(argv[5]);
+    // } else if (argc == 3 && (std::string(argv[2]) == std::string("--visualize") || std::string(argv[2]) == std::string("-v"))) {
+    //     problem.visualize = true;
+    // }
 
+    int depot_count = std::stoi(argv[2]);
+    
     srand(time(0));
-    problem.readFrom(argv[1]);
+    problem.readFrom(argv[1], depot_count);
     problem.preliminaryCheck();
     problem.solveAnnealing(INITIAL_TEMP, MIN_TEMP, COOLING_RATE, MAX_NEIGHBORS);
     problem.computeSolutionValue();

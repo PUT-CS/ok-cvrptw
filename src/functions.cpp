@@ -77,7 +77,7 @@ rolling:
 
 float choose_worse_solution(float temperature, std::vector<Depot>& prev, std::vector<Depot>& next)
 {
-    return std::exp(-1 * (objective_function(next) - objective_function(prev)) / temperature);
+    return std::exp(-1 *(objective_function(next) - objective_function(prev)) / temperature);
 }
 
 float roll() { return ((double)rand() / (RAND_MAX)); }

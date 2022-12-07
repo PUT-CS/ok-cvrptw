@@ -20,12 +20,13 @@ public:
     Depot start_depot;
     std::vector<std::vector<Depot>> solution;
     std::vector<std::vector<double>> distances;
+    double intial_solution_sum = 0;
     double solution_sum = 0;
     int routes = 0;
     bool bad_assignment = true;
     bool visualize = false;
     void computeDistances();
-    void readFrom(std::string filename);
+    void readFrom(std::string filename, int depot_count);
     void assignDepotsToTrucks(int truck_num);
     void preliminaryCheck();
     void print();

@@ -7,7 +7,7 @@
 #include <random>
 #include <vector>
 
-std::vector<Depot> Truck::solveAnnealing(Depot& start, int INITIAL_TEMP, int MIN_TEMP, float COOLING_RATE, int MAX_NEIGHBORS)
+std::vector<Depot> Truck::solveAnnealing(Depot& start, int INITIAL_TEMP, int MIN_TEMP, float COOLING_RATE, int MAX_NEIGHBORS, double* random_ptr)
 {
     // we have to create a feasible route through assigned depots
     if (this->assignment.empty()) {
@@ -18,7 +18,8 @@ std::vector<Depot> Truck::solveAnnealing(Depot& start, int INITIAL_TEMP, int MIN
 
     // generate a random, feasible solution
     std::vector<Depot> initial_solution = get_initial_solution(this->assignment, this->capacity, start);
-
+    *random_ptr += objective_function(initial_solution);
+    
     // check if the initial solution was found within the specified iteration limit
     if (initial_solution.size() == 1 && initial_solution[0].num == -1) {
         // the solution wasn't found
