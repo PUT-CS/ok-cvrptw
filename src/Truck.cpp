@@ -16,7 +16,7 @@ std::vector<Depot> Truck::solveTabuSearch(Depot &start, int MAX_FREQENCY, int MA
     int frequency = 0;
 
     // generate a random, feasible solution
-    std::vector<Depot> initial_solution = get_initial_solution(this->assignment, this->capacity, start);
+        std::vector<Depot> initial_solution = get_initial_solution(this->assignment, this->capacity, start);
 
     // check if the initial solution was found within the specified iteration limit
     if (initial_solution.size() == 1 && initial_solution[0].num == -1) {
@@ -26,23 +26,21 @@ std::vector<Depot> Truck::solveTabuSearch(Depot &start, int MAX_FREQENCY, int MA
         std::vector<Depot> v{d};
         return v;
     }
-    //double x = objective_function(initial_solution);
     std::deque<std::vector<int>> tabuList;
     std::vector<Depot> current = initial_solution;
     std::vector<Depot> best = current;
 
     while (frequency <= MAX_FREQENCY) {
         auto neighbor = get_neighboring_solution(current, start, this->capacity);
-        if (!is_tabu(tabuList, toIntVector(neighbor)) && objective_function(neighbor) < objective_function(current)) 
+        if (!is_tabu(tabuList, toIntVector(neighbor)) && objective_function(neighbor) <= objective_function(current)) 
             current = neighbor;
-        if (objective_function(current) < objective_function(best)) 
+        if (objective_function(current) <= objective_function(best)) 
             best = current;
         tabuList.push_back(toIntVector(current));
         if (tabuList.size() > MAX_TABU_SIZE)
             tabuList.pop_front();
     frequency++;
     }
-    //std::cout << x - objective_function(best) << std::endl;
     return best;
 }
 std::vector<Depot> Truck::solveAnnealing(Depot& start, int INITIAL_TEMP, int MIN_TEMP, float COOLING_RATE, int MAX_NEIGHBORS)
