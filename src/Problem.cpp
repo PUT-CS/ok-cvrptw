@@ -46,113 +46,15 @@ void Problem::assignDepotsToTrucks(int truck_num)
     }
 }
 
-void Problem::solveTabuSearch(int MAX_FREQENCY, int MAX_TABU_SIZE) {
-    // depot 0 never gets assigned!
-
-    long unsigned int used_trucks = this->depots.size()+1;
-
-    // start measuring overall time of annealing
-    auto start = std::chrono::high_resolution_clock().now();
-   
-    std::vector<Depot> tmp_solution;
-    std::vector<std::vector<Depot>> tmp_all_solution;
-    std::vector<std::vector<Depot>> least_trucks_all_solution;
-    std::vector<std::vector<Depot>> best_all_solution;
-
-    // attempt to use truck numbers all the way from num_of_trucks down to 1
-    while (used_trucks > 0) {
-        if (used_trucks>this->depots.size()) {
-            used_trucks--;
-            continue;
-        }
-        std::cout<< used_trucks << std::endl;
-        tmp_all_solution.clear();
-        // start measuring time in the current truck number
-        auto start_of_truck_num_iter = std::chrono::high_resolution_clock().now();
-        
-        // assigning procedure
-    assigning:
-        auto current = std::chrono::high_resolution_clock().now();
-        auto duration = std::chrono::duration_cast<std::chrono::seconds>(current - start);
-        auto duration_of_truck_num_iter = std::chrono::duration_cast<std::chrono::seconds>(current - start_of_truck_num_iter);
-
-        // clear all assignments
-        for (auto &truck : this->trucks)
-            truck.assignment.clear();
-        
-        // wait 4m 30s until exiting
-        if (duration.count() > 4*60 + 30)
-            return;
-
-        // a valid assignment hasn't been found in over 10s
-        if (duration_of_truck_num_iter.count() > 10) {
-            //std::cout<<"Timed out at "<<used_trucks<<std::endl;
-            break;
-        }
-        // generate an assignment for used_trucks number of trucks
-        this->assignDepotsToTrucks(used_trucks);
-        for (auto &truck : this->trucks) {
-            // solve annealing for each of the trucks
-            tmp_solution = get_initial_solution(truck.assignment, truck.capacity, this->start_depot);
-            //tmp_solution = truck.solveAnnealing(start_depot, INITIAL_TEMP, MIN_TEMP, COOLING_RATE, MAX_NEIGHBORS);
-            
-            if (tmp_solution.size() == 1 && tmp_solution[0].num == -1) {
-                // the assignment is bad, so break the loop and return to assigning, clear the vectors
-                this->solution.clear();
-                tmp_solution.clear();
-                for (auto &sol : tmp_all_solution) {
-                    sol.clear();
-                }
-                goto assigning;
-            }
-            // save the partial solution
-            tmp_all_solution.push_back(tmp_solution);
-            tmp_solution.clear();
-            
-        }
-        least_trucks_all_solution.clear();
-        least_trucks_all_solution = tmp_all_solution;
-        // decrease the number of used trucks
-        used_trucks-- ;
-    }
-
-    // now we know how many trucks we can use at minumum.
-    // we have to start annealing for that exact truck number and with a known good assignment
-
-    tmp_all_solution.clear();
-    tmp_solution.clear();
-    best_all_solution.clear();
-
-    std::vector<Depot> tmp;
-    for (auto& truck : trucks) {
-        if (least_trucks_all_solution.empty()) {
-            truck.assignment.clear();
-            continue;
-        }
-        tmp = least_trucks_all_solution.back();
-        tmp.erase(tmp.begin());
-        tmp.pop_back();
-        truck.assignment = tmp;
-        least_trucks_all_solution.pop_back();
-    }
-    
-    for (auto &truck : this->trucks) {
-        best_all_solution.push_back(truck.solveTabuSearch(this->start_depot, MAX_FREQENCY, MAX_TABU_SIZE));
-    }
-    
-    // save the best solution to an attribute so it can be computed and printed later
-    this->solution = best_all_solution;
-    return;
-}
-
-void Problem::solveAnnealing(int INITIAL_TEMP, int MIN_TEMP, float COOLING_RATE, int MAX_NEIGHBORS)
+void Problem::solveTabuSearch(int MAX_FREQENCY, int MAX_TABU_SIZE)
 {
     // depot 0 never gets assigned!
+
     long unsigned int used_trucks = this->depots.size() + 1;
 
     // start measuring overall time of annealing
     auto start = std::chrono::high_resolution_clock().now();
-    
+
     std::vector<Depot> tmp_solution;
     std::vector<std::vector<Depot>> tmp_all_solution;
     std::vector<std::vector<Depot>> least_trucks_all_solution;
@@ -164,6 +66,7 @@ void Problem::solveAnnealing(int INITIAL_TEMP, int MIN_TEMP, float COOLING_RATE,
             used_trucks--;
             continue;
         }
+        //std::cout << used_trucks << std::endl;
         tmp_all_solution.clear();
         // start measuring time in the current truck number
         auto start_of_truck_num_iter = std::chrono::high_resolution_clock().now();
@@ -179,19 +82,14 @@ void Problem::solveAnnealing(int INITIAL_TEMP, int MIN_TEMP, float COOLING_RATE,
             truck.assignment.clear();
 
         // wait 4m 30s until exiting
-        if (duration.count() > 4 * 60 + 30) {
-            //std::cout<<"Whole program timed out at "<<used_trucks<<std::endl;
-            break;
-        }
+        if (duration.count() > 4 * 60 + 30)
+            return;
 
         // a valid assignment hasn't been found in over 10s
         if (duration_of_truck_num_iter.count() > 10) {
-            //std::cout<<"Single iteration Timed out at "<<used_trucks<<std::endl;
+            // std::cout<<"Timed out at "<<used_trucks<<std::endl;
             break;
         }
-        
-        //std::cout<<used_trucks<<std::endl;
-        
         // generate an assignment for used_trucks number of trucks
         this->assignDepotsToTrucks(used_trucks);
         for (auto& truck : this->trucks) {
@@ -239,7 +137,7 @@ void Problem::solveAnnealing(int INITIAL_TEMP, int MIN_TEMP, float COOLING_RATE,
     }
 
     for (auto& truck : this->trucks) {
-        best_all_solution.push_back(truck.solveAnnealing(this->start_depot, INITIAL_TEMP, MIN_TEMP, COOLING_RATE, MAX_NEIGHBORS));
+        best_all_solution.push_back(truck.solveTabuSearch(this->start_depot, MAX_FREQENCY, MAX_TABU_SIZE));
     }
 
     // save the best solution to an attribute so it can be computed and printed later
